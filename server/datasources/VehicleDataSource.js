@@ -9,7 +9,6 @@ export class VehicleDataSource extends RESTDataSource {
   async getCar(plateNumber) {
     const result = await this.get("car", {plateNumber});
     //const {results} = await this.get("", null, { cacheOptions: {ttl:5}});
-    console.log(result);
     return result;
   }
 

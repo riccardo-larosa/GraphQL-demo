@@ -7,9 +7,7 @@ export class RandomUserDataSource extends RESTDataSource {
   }
 
   async getPerson() {
-    //const {results} = await this.get("");
     const {results} = await this.get("", null, { cacheOptions: {ttl:5}});
-    console.log(results);
     return results;
   }
 }
