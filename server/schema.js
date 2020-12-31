@@ -47,13 +47,17 @@ export const typeDefs = gql`
     slug: String!
   }
 
+  type Mutation {
+    createSomething(title:String): String #TBD
+  }
+
   type Query {
     hello(name: String): String!
-    randomPerson: [Person!]!
-    people(id: Int!): SWPerson
-    car(plateNumber: String!): Car 
-    cars: [Car]
-    brands: [Brand]
+    randomPerson: [Person!]!        # https://api.randomuser.me/
+    people(id: Int!): SWPerson      # https://swapi.dev/api/people/
+    car(plateNumber: String!): Car  # https://mvrp.herokuapp.com/api/
+    cars: [Car]                     # https://mvrp.herokuapp.com/api/
+    brands: [Brand]                 # https://api.moltin.com/v2/brands 
   }
 
 `;

@@ -1,14 +1,14 @@
 import { ApolloServer } from "apollo-server";
+import { typeDefs } from "./schema.js";
+import { BrandDataSource } from "./datasources/BrandDataSource.js";
+import { FilmDataSource } from "./datasources/FilmDataSource.js";
 import { PeopleDataSource } from "./datasources/PeopleDataSource.js";
+import { PlanetDataSource } from "./datasources/PlanetDataSource.js";
 import { RandomUserDataSource } from "./datasources/RandomUserDataSource.js";
 import { VehicleDataSource } from "./datasources/VehicleDataSource.js";
-import { BrandDataSource } from "./datasources/BrandDataSource.js";
-import { typeDefs } from "./schema.js";
-import { FilmDataSource } from "./datasources/FilmDataSource.js";
-import { PlanetDataSource } from "./datasources/PlanetDataSource.js";
 
 
-
+// using RESTDataSource from Apollo
 const dataSources = () => ({
   peopleAPI: new PeopleDataSource(),
   randomUserAPI: new RandomUserDataSource(),
@@ -18,15 +18,11 @@ const dataSources = () => ({
   planetAPI: new PlanetDataSource(),
 });
 
+//this is a mish-mash of resolvers to show that you can query different things in GraphQL
 const resolvers = {
   SWPerson: {
-    films: ( parent, __, {dataSources}) => { 
-      const promises = parent.films.map(async url => {
-        return dataSources.filmAPI.getFilmByUrl(url);
-      });
-      return Promise.all(promises);
-    }, 
-    homeworld: (parent, __, {dataSources}) => dataSources.planetAPI.getPlanetByUrl(parent.homeworld)
+    films: ( parent, __, {dataSources}) => parent.films.map( url => dataSources.filmAPI.getFilmByUrl(url) ), 
+    homeworld: (parent, __, {dataSources}) => dataSources.planetAPI.getPlanetByUrl(parent.homeworld),
   },
   Query: {
     hello: (_, {name}) => `Hello ${name}`,
