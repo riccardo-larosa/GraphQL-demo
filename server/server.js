@@ -6,6 +6,7 @@ import { PeopleDataSource } from "./datasources/PeopleDataSource.js";
 import { PlanetDataSource } from "./datasources/PlanetDataSource.js";
 import { RandomUserDataSource } from "./datasources/RandomUserDataSource.js";
 import { VehicleDataSource } from "./datasources/VehicleDataSource.js";
+import { CartDataSource } from "./datasources/CartDataSource.js";
 
 
 // using RESTDataSource from Apollo
@@ -16,10 +17,20 @@ const dataSources = () => ({
   brandAPI: new BrandDataSource(),
   filmAPI: new FilmDataSource(),
   planetAPI: new PlanetDataSource(),
+  cartAPI: new CartDataSource(),
 });
 
 //this is a mish-mash of resolvers to show that you can query different things in GraphQL
 const resolvers = {
+  CartItem: {
+    unitPrice: (parent) => parent.unit_price,
+  },
+  Cart: {
+    priceWithTax: (parent) => parent.meta.display_price.with_tax,
+    priceWithoutTax: (parent) => parent.meta.display_price.without_tax,
+    tax: (parent) => parent.meta.display_price.tax,
+    cartItems: (parent, __, { dataSources }) => dataSources.cartAPI.getCartItems(parent.id), 
+  },
   SWPerson: {
     films: ( parent, __, {dataSources}) => parent.films.map( url => dataSources.filmAPI.getFilmByUrl(url) ), 
     homeworld: (parent, __, {dataSources}) => dataSources.planetAPI.getPlanetByUrl(parent.homeworld),
@@ -31,6 +42,10 @@ const resolvers = {
     car: (_root, {plateNumber}, { dataSources }) => dataSources.vehicleAPI.getCar(plateNumber),
     cars: (_, __, {dataSources }) => dataSources.vehicleAPI.getCars(), 
     brands: (_, __, { dataSources }) =>    dataSources.brandAPI.getBrands(),
+    cart: (_, { id }, { dataSources }) => dataSources.cartAPI.getCart(id),
+  },
+  Mutation: {
+    updateCartItem: (_,  args , { dataSources }) => dataSources.cartAPI.updateCartItem(args.cartId, args.itemId, args.qty)
   }
 };
 

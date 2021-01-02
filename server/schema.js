@@ -1,4 +1,4 @@
-import {gql} from "apollo-server";
+import { gql } from "apollo-server";
 
 export const typeDefs = gql`
   type Person {
@@ -47,8 +47,42 @@ export const typeDefs = gql`
     slug: String!
   }
 
+  type Amount {
+    # meta": {
+    #  "display_price": {
+    #    "with_tax": {
+    #      "amount": 31495,
+    #      "currency": "USD",
+    #      "formatted": "$314.95"
+    #    },
+    amount: Int
+    currency: String
+    formatted: String
+  }
+
+  type CartItem {
+    id: ID
+    type: String
+    name: String
+    description: String
+    quantity: Int
+    unitPrice: Amount
+  }
+
+  type Cart {
+    id: ID!
+    name: String
+    description: String
+    type: String
+    #links: Link
+    priceWithTax: Amount
+    priceWithoutTax: Amount
+    tax: Amount
+    cartItems: [CartItem]
+  }
+
   type Mutation {
-    createSomething(title:String): String #TBD
+    updateCartItem(cartId: String, itemId: String, qty: Int): CartItem #TBD
   }
 
   type Query {
@@ -58,6 +92,7 @@ export const typeDefs = gql`
     car(plateNumber: String!): Car  # https://mvrp.herokuapp.com/api/
     cars: [Car]                     # https://mvrp.herokuapp.com/api/
     brands: [Brand]                 # https://api.moltin.com/v2/brands 
+    cart(id: ID!): Cart             # https://api.moltin.com/vs/carts 
   }
 
 `;
