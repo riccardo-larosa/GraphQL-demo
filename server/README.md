@@ -23,7 +23,7 @@ For the Elastic Path API you need to add in the HTTP Headers the Authorization t
 
 ```json
 {
-  "Authorization": "Bearer <INSERT-YOUR-TOKEN-HERE"
+  "Authorization": "Bearer <INSERT-YOUR-TOKEN-HERE>"
 }
 ```
 
@@ -53,6 +53,48 @@ Examples of queries that you can run:
   brands {
     id
     type
+    name
+  }
+}
+```
+
+Added cart example with a Query:
+```js
+{
+  cart(id:"<add cart id>") {
+    id
+    name
+    description
+    type
+    priceWithTax {
+      amount
+      currency
+      formatted
+    }
+    tax {formatted}
+    cartItems {
+      id
+      name
+      quantity
+      description
+      unitPrice {
+        amount
+        currency
+        formatted 
+      }
+    }
+  }
+}
+```
+and a mutation: 
+```js
+mutation {
+  updateCartItem(
+    cartId:"36452b2e58a44cd96b426eb40de8e982"
+    itemId:"60818be2-29d9-4341-b79a-772c034039f0"
+    qty: 3)  {
+    id
+    quantity
     name
   }
 }
